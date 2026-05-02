@@ -44,7 +44,7 @@ class GCodeButton:
             if not commands.strip():
                 return
             self.gcode.run_script(commands)
-        except:
+        except Exception:
             logging.exception("Script running error")
 
     def get_status(self, eventtime=None):

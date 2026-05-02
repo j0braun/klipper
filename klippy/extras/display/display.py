@@ -61,7 +61,7 @@ class DisplayGroup:
             pos = c.get('position')
             try:
                 row, col = [int(v.strip()) for v in pos.split(',')]
-            except:
+            except Exception:
                 raise config.error("Unable to parse 'position' in section '%s'"
                                    % (c.get_name(),))
             items.append((row, col, c.get_name()))
@@ -233,7 +233,7 @@ class PrinterLCD:
         # Update normal display
         try:
             self.show_data_group.show(self, self.display_templates, eventtime)
-        except:
+        except Exception:
             logging.exception("Error during display screen update")
         self.lcd_chip.flush()
         if self.redraw_request_pending:

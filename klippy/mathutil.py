@@ -56,7 +56,7 @@ def background_coordinate_descent(printer, adj_params, params, error_func):
         queuelogger.clear_bg_logging()
         try:
             res = coordinate_descent(adj_params, params, error_func)
-        except:
+        except Exception:
             child_conn.send((True, traceback.format_exc()))
             child_conn.close()
             return

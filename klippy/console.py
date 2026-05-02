@@ -217,7 +217,7 @@ class KeyboardReader:
                     if type(e) == type(0.):
                         e = int(e)
                     evalparts[i] = str(e)
-            except:
+            except Exception:
                 self.output("Unable to evaluate: %s" % (line,))
                 return None
             line = ''.join(evalparts)

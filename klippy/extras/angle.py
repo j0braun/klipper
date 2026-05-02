@@ -25,7 +25,7 @@ class AngleCalibration:
             return
         try:
             import numpy
-        except:
+        except Exception:
             raise config.error("Angle calibration requires numpy module")
         sconfig = config.getsection(self.stepper_name)
         sconfig.getint('microsteps', note_valid=False)
