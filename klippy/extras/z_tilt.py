@@ -53,7 +53,7 @@ class ZAdjustHelper:
             try:
                 toolhead.move(curpos, speed)
                 toolhead.set_position(curpos)
-            except:
+            except Exception:
                 logging.exception("ZAdjustHelper adjust_steppers")
                 toolhead.flush_step_generation()
                 for s in self.z_steppers:
