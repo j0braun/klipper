@@ -175,7 +175,7 @@ class Printer:
         # Enter main reactor loop
         try:
             self.reactor.run()
-        except:
+        except Exception:
             msg = "Unhandled exception during run"
             logging.exception(msg)
             # Exception from a reactor callback - try to shutdown
@@ -183,7 +183,7 @@ class Printer:
                 self.reactor.register_callback((lambda e:
                                                 self.invoke_shutdown(msg)))
                 self.reactor.run()
-            except:
+            except Exception:
                 logging.exception("Repeat unhandled exception during run")
                 # Another exception - try to exit
                 self.run_result = "error_exit"
