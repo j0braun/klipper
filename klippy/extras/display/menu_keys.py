@@ -22,7 +22,7 @@ class MenuKeys:
         if encoder_pins is not None:
             try:
                 pin1, pin2 = encoder_pins.split(',')
-            except:
+            except ValueError:
                 raise config.error("Unable to parse encoder_pins")
             buttons.register_rotary_encoder(pin1.strip(), pin2.strip(),
                                             self.encoder_cw_callback,
