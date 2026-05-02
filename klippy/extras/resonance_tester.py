@@ -49,7 +49,7 @@ def _parse_axis(gcmd, raw_axis):
         dir_x = float(dirs[0].strip())
         dir_y = float(dirs[1].strip())
         dir_z = float(dirs[2].strip()) if len(dirs) == 3 else 0.
-    except:
+    except ValueError:
         raise gcmd.error(
                 "Unable to parse axis direction '%s'" % (raw_axis,))
     return TestAxis(vib_dir=(dir_x, dir_y, dir_z))

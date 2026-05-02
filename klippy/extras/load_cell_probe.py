@@ -96,7 +96,7 @@ class ParamHelper:
                 return []
             try:
                 float_list = [float(p.strip()) for p in value.split(',')]
-            except:
+            except ValueError:
                 raise gcmd.error("Error on '%s': unable to parse %s" % (
                     gcmd.get_commandline(), value))
         else:
@@ -476,7 +476,7 @@ class LoadCellPrinterProbe:
         try:
             global np
             import numpy as np
-        except:
+        except ImportError:
             raise cfg_error("[load_cell_probe] requires the NumPy module")
         self._printer = config.get_printer()
         # Sensor types supported by load_cell_probe
