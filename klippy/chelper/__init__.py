@@ -265,10 +265,12 @@ def check_build_code(sources, target):
 
 # Check if the current gcc version supports a particular command-line option
 def check_gcc_option(option):
-    cmd = "%s %s -S -o /dev/null -xc /dev/null > /dev/null 2>&1" % (
-        GCC_CMD, option)
-    res = os.system(cmd)
-    return res == 0
+    cmd = "%s %s -S -o /dev/null -xc /dev/null" % (GCC_CMD, option)
+    try:
+        res = subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return not res
+    except Exception:
+        return False
 
 # Check if the current gcc version supports a particular command-line option
 def do_build_code(cmd):
