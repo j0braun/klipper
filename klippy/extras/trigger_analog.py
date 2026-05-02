@@ -79,7 +79,7 @@ class DigitalFilter:
     def get_scipy_signal(self):
         try:
             import scipy.signal as signal
-        except:
+        except ImportError:
             raise self.cfg_error("DigitalFilter require the SciPy module")
         return signal
     def add_highpass(self, highpass, highpass_order):
