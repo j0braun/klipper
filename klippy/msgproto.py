@@ -342,14 +342,14 @@ class MessageParser:
                 argparts[name] = tval
         except error as e:
             raise
-        except:
+        except Exception:
             #logging.exception("Unable to extract params")
             self._error("Unable to extract params from: %s", msgname)
         try:
             cmd = mp.encode_by_name(**argparts)
         except error as e:
             raise
-        except:
+        except Exception:
             #logging.exception("Unable to encode")
             self._error("Unable to encode: %s", msgname)
         return cmd
@@ -368,7 +368,7 @@ class MessageParser:
             msg = mp.encode_by_name(**argparts)
         except error as e:
             raise
-        except:
+        except Exception:
             #logging.exception("Unable to encode")
             self._error("Unable to encode: %s", msgname)
         res, pos = mp.parse(msg, 0)
@@ -451,7 +451,7 @@ class MessageParser:
             self._error("Firmware constant '%s' not found", name)
         try:
             value = parser(self.config[name])
-        except:
+        except Exception:
             self._error("Unable to parse firmware constant %s: %s",
                         name, self.config[name])
         return value

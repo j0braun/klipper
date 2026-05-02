@@ -58,7 +58,7 @@ def parse_config_pair(config, option, default, minval=None, maxval=None):
 def parse_gcmd_pair(gcmd, name, minval=None, maxval=None):
     try:
         pair = [int(v.strip()) for v in gcmd.get(name).split(',')]
-    except:
+    except Exception:
         raise gcmd.error("Unable to parse parameter '%s'" % (name,))
     if len(pair) != 2:
         if len(pair) != 1:
@@ -78,7 +78,7 @@ def parse_gcmd_pair(gcmd, name, minval=None, maxval=None):
 def parse_gcmd_coord(gcmd, name):
     try:
         v1, v2 = [float(v.strip()) for v in gcmd.get(name).split(',')]
-    except:
+    except Exception:
         raise gcmd.error("Unable to parse parameter '%s'" % (name,))
     return v1, v2
 

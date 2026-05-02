@@ -250,7 +250,7 @@ class HomingViaProbeHelper:
             self.multi_probe_pending = False
             try:
                 self.mcu_probe.multi_probe_end()
-            except:
+            except Exception:
                 logging.exception("Homing multi-probe end")
     def setup_pin(self, pin_type, pin_params):
         if pin_type != 'endstop' or pin_params['pin'] != 'z_virtual_endstop':
@@ -348,7 +348,7 @@ class ProbeSessionHelper:
         if self.hw_probe_session is not None:
             try:
                 self.end_probe_session()
-            except:
+            except Exception:
                 logging.exception("Multi-probe end")
     def _probe_state_error(self):
         raise self.printer.command_error(

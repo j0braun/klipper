@@ -67,7 +67,7 @@ def dump_file_stats(build_dir, filename):
         fsize = os.path.getsize(fname)
         timestr = time.asctime(time.localtime(mtime))
         logging.info("Build file %s(%d): %s", fname, fsize, timestr)
-    except:
+    except Exception:
         logging.info("No build file %s", fname)
 
 # Try to log information on the last mcu build
@@ -88,7 +88,7 @@ def dump_mcu_build():
         logging.info("Last MCU build tools: %s", data.get('build_versions', ''))
         cparts = ["%s=%s" % (k, v) for k, v in data.get('config', {}).items()]
         logging.info("Last MCU build config: %s", " ".join(cparts))
-    except:
+    except Exception:
         pass
     dump_file_stats(build_dir, 'out/klipper.elf')
 
@@ -188,7 +188,7 @@ def _get_repo_info(gitdir):
             logging.debug("Error running git remote get-url: %s", err)
             return repo_info
         repo_info["url"] = str(remote_url.strip().decode())
-    except:
+    except Exception:
         logging.debug("Error fetching repo info: %s", traceback.format_exc())
     return repo_info
 
@@ -228,7 +228,7 @@ def get_git_version(from_file=True):
             return git_info
         else:
             logging.debug("Error getting git version: %s", err)
-    except:
+    except Exception:
         logging.debug("Exception on run: %s", traceback.format_exc())
 
     if from_file:

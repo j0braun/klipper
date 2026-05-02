@@ -247,7 +247,7 @@ class ToolHead:
             raise
         except self.printer.lookup_object('pins').error as e:
             raise
-        except:
+        except Exception:
             msg = "Error loading kinematics '%s'" % (kin_name,)
             logging.exception(msg)
             raise config.error(msg)
@@ -330,7 +330,7 @@ class ToolHead:
         try:
             if self.special_queuing_state == "Priming":
                 self._flush_lookahead(is_runout=True)
-        except:
+        except Exception:
             logging.exception("Exception in priming_handler")
             self.printer.invoke_shutdown("Exception in priming_handler")
         return self.reactor.NEVER

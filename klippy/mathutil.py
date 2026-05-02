@@ -76,11 +76,13 @@ def background_coordinate_descent(printer, adj_params, params, error_func):
             gcode.respond_info("Working on calibration...", log=False)
         eventtime = reactor.pause(eventtime + .1)
     # Return results
-    is_err, res = parent_conn.recv()
-    if is_err:
-        raise Exception("Error in coordinate descent: %s" % (res,))
-    calc_proc.join()
-    parent_conn.close()
+    try:
+        is_err, res = parent_conn.recv()
+        if is_err:
+            raise Exception("Error in coordinate descent: %s" % (res,))
+    finally:
+        calc_proc.join()
+        parent_conn.close()
     return res
 
 

@@ -61,7 +61,7 @@ class SerialReader:
                 with self.lock:
                     hdl = self.handlers.get(hdl, self.handle_default)
                     hdl(params)
-            except:
+            except Exception:
                 logging.exception("%sException in serial callback",
                                   self.warn_prefix)
     def _error(self, msg, *params):
@@ -159,7 +159,7 @@ class SerialReader:
                 got_uuid = bytearray(params['canbus_uuid'])
                 if got_uuid == bytearray(uuid):
                     break
-            except:
+            except Exception:
                 logging.exception("%sError in canbus_uuid check",
                                   self.warn_prefix)
             logging.info("%sFailed to match canbus_uuid - retrying..",

@@ -265,16 +265,23 @@ def check_build_code(sources, target):
 
 # Check if the current gcc version supports a particular command-line option
 def check_gcc_option(option):
-    cmd = "%s %s -S -o /dev/null -xc /dev/null > /dev/null 2>&1" % (
-        GCC_CMD, option)
-    res = os.system(cmd)
-    return res == 0
+    cmd = [GCC_CMD, option, "-S", "-o", "/dev/null", "-xc", "/dev/null"]
+    try:
+        res = subprocess.call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return res == 0
+    except Exception:
+        return False
 
 # Check if the current gcc version supports a particular command-line option
 def do_build_code(cmd):
-    res = os.system(cmd)
-    if res:
-        msg = "Unable to build C code module (error=%s)" % (res,)
+    try:
+        res = subprocess.call(cmd, shell=True)
+        if res:
+            msg = "Unable to build C code module (error=%s)" % (res,)
+            logging.error(msg)
+            raise Exception(msg)
+    except Exception as e:
+        msg = "Unable to build C code module (error=%s)" % (str(e),)
         logging.error(msg)
         raise Exception(msg)
 
@@ -344,7 +351,11 @@ def run_hub_ctrl(enable_power):
     if check_build_code(srcfiles, destlib):
         logging.info("Building C code module %s", HC_TARGET)
         do_build_code(HC_COMPILE_CMD % (destlib, ' '.join(srcfiles)))
-    os.system(HC_CMD % (hubdir, enable_power))
+    cmd = [hubdir + "/" + HC_TARGET, "-h", "0", "-P", "2", "-p", str(enable_power)]
+    try:
+        subprocess.call(cmd)
+    except Exception:
+        logging.exception("hub-ctrl command failed")
 
 
 if __name__ == '__main__':

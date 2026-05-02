@@ -90,15 +90,17 @@ class AccelQueryHelper:
             try:
                 # Try to re-nice writing process
                 os.nice(20)
-            except:
+            except Exception:
                 pass
-            f = open(filename, "w")
-            f.write("#time,accel_x,accel_y,accel_z\n")
-            samples = self.samples or self.get_samples()
-            for t, accel_x, accel_y, accel_z in samples:
-                f.write("%.6f,%.6f,%.6f,%.6f\n" % (
-                    t, accel_x, accel_y, accel_z))
-            f.close()
+            try:
+                with open(filename, "w") as f:
+                    f.write("#time,accel_x,accel_y,accel_z\n")
+                    samples = self.samples or self.get_samples()
+                    for t, accel_x, accel_y, accel_z in samples:
+                        f.write("%.6f,%.6f,%.6f,%.6f\n" % (
+                            t, accel_x, accel_y, accel_z))
+            except Exception:
+                logging.exception("adxl345 write_to_file failed")
         write_proc = multiprocessing.Process(target=write_impl)
         write_proc.daemon = True
         write_proc.start()

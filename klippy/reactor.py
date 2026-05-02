@@ -349,7 +349,7 @@ class SelectReactor:
         for g in self._all_greenlets:
             try:
                 g.throw()
-            except:
+            except Exception:
                 logging.exception("reactor finalize greenlet terminate")
         self._all_greenlets = []
         if self._pipe_fds is not None:
@@ -431,5 +431,5 @@ class EPollReactor(SelectReactor):
 try:
     select.poll
     Reactor = PollReactor
-except:
+except AttributeError:
     Reactor = SelectReactor

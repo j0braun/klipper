@@ -83,7 +83,7 @@ class ShaperCalibrate:
             queuelogger.clear_bg_logging()
             try:
                 res = method(*args)
-            except:
+            except Exception:
                 child_conn.send((True, traceback.format_exc()))
                 child_conn.close()
                 return
@@ -109,20 +109,22 @@ class ShaperCalibrate:
                 gcode.respond_info("Wait for calculations..", log=False)
             eventtime = reactor.pause(eventtime + .1)
         # Return results
-        status, recv = parent_conn.recv()
-        if recv is None:
-            res = []
-            while True:
-                status, recv = parent_conn.recv()
-                if status:
-                    break
-                res.append(recv)
-        else:
-            res = recv
-        if status and recv is not None:
-            raise self.error("Error in remote calculation: %s" % (recv,))
-        calc_proc.join()
-        parent_conn.close()
+        try:
+            status, recv = parent_conn.recv()
+            if recv is None:
+                res = []
+                while True:
+                    status, recv = parent_conn.recv()
+                    if status:
+                        break
+                    res.append(recv)
+            else:
+                res = recv
+            if status and recv is not None:
+                raise self.error("Error in remote calculation: %s" % (recv,))
+        finally:
+            calc_proc.join()
+            parent_conn.close()
         return res
 
     def _split_into_windows(self, x, window_size, overlap):
