@@ -13,7 +13,8 @@ class SaveVariables:
         self.allVariables = {}
         try:
             if not os.path.exists(self.filename):
-                open(self.filename, "w").close()
+                with open(self.filename, "w") as f:
+                    pass
             self.loadVariables()
         except self.printer.command_error as e:
             raise config.error(str(e))
@@ -28,7 +29,7 @@ class SaveVariables:
             if varfile.has_section('Variables'):
                 for name, val in varfile.items('Variables'):
                     allvars[name] = ast.literal_eval(val)
-        except:
+        except Exception:
             msg = "Unable to parse existing variable file"
             logging.exception(msg)
             raise self.printer.command_error(msg)
@@ -51,10 +52,9 @@ class SaveVariables:
         for name, val in sorted(newvars.items()):
             varfile.set('Variables', name, repr(val))
         try:
-            f = open(self.filename, "w")
-            varfile.write(f)
-            f.close()
-        except:
+            with open(self.filename, "w") as f:
+                varfile.write(f)
+        except (IOError, OSError):
             msg = "Unable to save variable"
             logging.exception(msg)
             raise gcmd.error(msg)
