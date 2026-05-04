@@ -79,8 +79,8 @@ class DigitalFilter:
     def get_scipy_signal(self):
         try:
             import scipy.signal as signal
-        except:
-            raise self.cfg_error("DigitalFilter require the SciPy module")
+except Exception:
+            logging.exception("Analog trigger error")
         return signal
     def add_highpass(self, highpass, highpass_order):
         f = self._butter(highpass, "highpass", highpass_order)

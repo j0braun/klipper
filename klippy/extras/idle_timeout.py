@@ -48,8 +48,8 @@ class IdleTimeout:
         try:
             script = self.idle_gcode.render()
             self.gcode.run_script(script)
-        except:
-            logging.exception("idle timeout gcode execution")
+except Exception:
+            logging.exception("Idle timeout error")
             self.state = "Ready"
             return eventtime + 1.
         print_time = self.toolhead.get_last_move_time()
