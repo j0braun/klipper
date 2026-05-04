@@ -66,22 +66,24 @@ def background_coordinate_descent(printer, adj_params, params, error_func):
     calc_proc = multiprocessing.Process(target=wrapper)
     calc_proc.daemon = True
     calc_proc.start()
-    # Wait for the process to finish
-    reactor = printer.get_reactor()
-    gcode = printer.lookup_object("gcode")
-    eventtime = last_report_time = reactor.monotonic()
-    while calc_proc.is_alive():
-        if eventtime > last_report_time + 5.:
-            last_report_time = eventtime
-            gcode.respond_info("Working on calibration...", log=False)
-        eventtime = reactor.pause(eventtime + .1)
-    # Return results
-    is_err, res = parent_conn.recv()
-    if is_err:
-        raise Exception("Error in coordinate descent: %s" % (res,))
-    calc_proc.join()
-    parent_conn.close()
-    return res
+    try:
+        # Wait for the process to finish
+        reactor = printer.get_reactor()
+        gcode = printer.lookup_object("gcode")
+        eventtime = last_report_time = reactor.monotonic()
+        while calc_proc.is_alive():
+            if eventtime > last_report_time + 5.:
+                last_report_time = eventtime
+                gcode.respond_info("Working on calibration...", log=False)
+            eventtime = reactor.pause(eventtime + .1)
+        # Return results
+        is_err, res = parent_conn.recv()
+        if is_err:
+            raise Exception("Error in coordinate descent: %s" % (res,))
+        return res
+    finally:
+        calc_proc.join()
+        parent_conn.close()
 
 
 ######################################################################
