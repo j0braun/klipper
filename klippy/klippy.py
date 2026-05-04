@@ -201,7 +201,9 @@ class Printer:
             logging.info(info)
         if self.bglogger is not None:
             self.bglogger.set_rollover_info(name, info)
-    def invoke_shutdown(self, msg, details={}):
+    def invoke_shutdown(self, msg, details=None):
+        if details is None:
+            details = {}
         if self.in_shutdown_state:
             return
         logging.error("Transition to shutdown state: %s", msg)
