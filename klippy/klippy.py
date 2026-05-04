@@ -5,6 +5,7 @@
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
 import sys, os, gc, optparse, logging, time, collections, importlib
+from typing import Any, Dict, List, Optional, Tuple
 import util, reactor, queuelogger, msgproto
 import gcode, configfile, pins, mcu, toolhead, webhooks
 
@@ -25,7 +26,7 @@ Printer is halted
 class Printer:
     config_error = configfile.error
     command_error = gcode.CommandError
-    def __init__(self, main_reactor, bglogger, start_args):
+    def __init__(self, main_reactor: Any, bglogger: Any, start_args: Dict[str, Any]):
         self.bglogger = bglogger
         self.start_args = start_args
         self.reactor = main_reactor
@@ -38,11 +39,11 @@ class Printer:
         # Init printer components that must be setup prior to config
         for m in [gcode, webhooks]:
             m.add_early_printer_objects(self)
-    def get_start_args(self):
+    def get_start_args(self) -> Dict[str, Any]:
         return self.start_args
-    def get_reactor(self):
+    def get_reactor(self) -> Any:
         return self.reactor
-    def get_state_message(self):
+    def get_state_message(self) -> Tuple[str, str]:
         if self.state_message == message_ready:
             category = "ready"
         elif self.state_message == message_startup:
@@ -167,7 +168,7 @@ class Printer:
             logging.exception("Unhandled exception during ready callback")
             self.invoke_shutdown("Internal error during ready callback: %s"
                                  % (str(e),))
-    def run(self):
+    def run(self) -> Optional[str]:
         systime = time.time()
         monotime = self.reactor.monotonic()
         logging.info("Start printer at %s (%.1f %.1f)",
@@ -196,7 +197,7 @@ class Printer:
         except Exception:
             logging.exception("Unhandled exception during post run")
         return run_result
-    def set_rollover_info(self, name, info, log=True):
+    def set_rollover_info(self, name: str, info: str, log: bool = True) -> None:
         if log:
             logging.info(info)
         if self.bglogger is not None:
