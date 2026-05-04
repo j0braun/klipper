@@ -3,7 +3,7 @@
 # Copyright (C) 2016-2021  Kevin O'Connor <kevin@koconnor.net>
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
-import os, logging
+import os, logging, subprocess, subprocess
 import cffi
 
 
@@ -267,12 +267,12 @@ def check_build_code(sources, target):
 def check_gcc_option(option):
     cmd = "%s %s -S -o /dev/null -xc /dev/null > /dev/null 2>&1" % (
         GCC_CMD, option)
-    res = os.system(cmd)
+    res = subprocess.call(cmd, shell=True)
     return res == 0
 
 # Check if the current gcc version supports a particular command-line option
 def do_build_code(cmd):
-    res = os.system(cmd)
+    res = subprocess.call(cmd, shell=True)
     if res:
         msg = "Unable to build C code module (error=%s)" % (res,)
         logging.error(msg)
