@@ -53,8 +53,8 @@ class ZAdjustHelper:
             try:
                 toolhead.move(curpos, speed)
                 toolhead.set_position(curpos)
-            except:
-                logging.exception("ZAdjustHelper adjust_steppers")
+except Exception:
+            logging.exception("Error in z_tilt adjust")
                 toolhead.flush_step_generation()
                 for s in self.z_steppers:
                     s.set_trapq(toolhead.get_trapq())
