@@ -103,8 +103,8 @@ class PrinterMCUError:
         for mcu_name, mcu in self.printer.lookup_objects('mcu'):
             try:
                 mcu_version = mcu.get_status()['mcu_version']
-            except:
-                logging.exception("Unable to retrieve mcu_version from mcu")
+except Exception:
+        logging.exception("MCU error handling failed")
                 continue
             if mcu_version != host_version:
                 msg_update.append("%s: Current version %s"
