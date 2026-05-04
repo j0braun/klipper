@@ -40,7 +40,7 @@ class ConfigWrapper:
             v = parser(self.section, option)
         except self.error as e:
             raise
-        except:
+        except Exception:
             raise error("Unable to parse option '%s' in section '%s'"
                         % (option, self.section))
         if note_valid:
@@ -144,7 +144,7 @@ class ConfigFileReader:
             f = open(filename, 'r')
             data = f.read()
             f.close()
-        except:
+        except (IOError, OSError):
             msg = "Unable to open config file %s" % (filename,)
             logging.exception(msg)
             raise error(msg)
@@ -394,7 +394,7 @@ class ConfigAutoSave:
             f.close()
             os.rename(cfgname, backup_name)
             os.rename(temp_name, cfgname)
-        except:
+        except (IOError, OSError):
             msg = "Unable to write config file during SAVE_CONFIG"
             logging.exception(msg)
             raise gcmd.error(msg)
