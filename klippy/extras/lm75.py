@@ -62,8 +62,8 @@ class LM75:
         try:
             prodid = self.read_register('PRODID', 1)[0]
             logging.info("lm75: Chip ID %#x" % prodid)
-        except:
-            pass
+except Exception:
+            logging.exception("LM75 sensor error")
 
     def _sample_lm75(self, eventtime):
         try:
