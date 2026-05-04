@@ -215,7 +215,7 @@ class PrinterMotionQueuing:
                     return self.reactor.NEVER
                 waketime = self.last_flush_time - BGFLUSH_LOW_TIME
             return eventtime + waketime - est_print_time
-        except:
+        except Exception:
             logging.exception("Exception in flush_handler")
             self.printer.invoke_shutdown("Exception in flush_handler")
         return self.reactor.NEVER
@@ -236,7 +236,7 @@ class PrinterMotionQueuing:
             self._advance_flush_time(self.need_flush_time + BGFLUSH_EXTRA_TIME)
             self.do_kick_flush_timer = True
             return self.reactor.NEVER
-        except:
+        except Exception:
             logging.exception("Exception in flush_handler_debug")
             self.printer.invoke_shutdown("Exception in flush_handler_debug")
         return self.reactor.NEVER
