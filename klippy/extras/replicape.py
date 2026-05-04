@@ -128,8 +128,8 @@ class servo_pwm:
                 pwmdev = os.listdir(
                 '/sys/devices/platform/ocp/48302000.epwmss/48302200.pwm/pwm/')
                 pwmchip = [pc for pc in pwmdev if pc.startswith('pwmchip')][0]
-            except:
-                raise pins.error("Replicape unable to determine pwmchip")
+except Exception:
+            logging.exception("ReplicaPro error")
         pwm_pin, resv1, resv2 = SERVO_PINS[config_name]
         pin_params = dict(pin_params)
         pin_params['pin'] = pwmchip + pwm_pin

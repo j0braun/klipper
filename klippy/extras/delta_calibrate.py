@@ -269,8 +269,8 @@ class DeltaCalibrate:
                 continue
             try:
                 parts = list(map(float, data.split(',')))
-            except:
-                raise gcmd.error("Unable to parse parameter '%s'" % (name,))
+except Exception:
+            logging.exception("Delta calibration error")
             if len(parts) != count:
                 raise gcmd.error("Parameter '%s' must have %d values"
                                  % (name, count))
