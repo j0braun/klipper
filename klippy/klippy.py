@@ -175,7 +175,7 @@ class Printer:
         # Enter main reactor loop
         try:
             self.reactor.run()
-        except:
+        except Exception:
             msg = "Unhandled exception during run"
             logging.exception(msg)
             # Exception from a reactor callback - try to shutdown
@@ -183,7 +183,7 @@ class Printer:
                 self.reactor.register_callback((lambda e:
                                                 self.invoke_shutdown(msg)))
                 self.reactor.run()
-            except:
+            except Exception:
                 logging.exception("Repeat unhandled exception during run")
                 # Another exception - try to exit
                 self.run_result = "error_exit"
@@ -193,7 +193,7 @@ class Printer:
             if run_result == 'firmware_restart':
                 self.send_event("klippy:firmware_restart")
             self.send_event("klippy:disconnect")
-        except:
+        except Exception:
             logging.exception("Unhandled exception during post run")
         return run_result
     def set_rollover_info(self, name, info, log=True):
@@ -201,7 +201,9 @@ class Printer:
             logging.info(info)
         if self.bglogger is not None:
             self.bglogger.set_rollover_info(name, info)
-    def invoke_shutdown(self, msg, details={}):
+    def invoke_shutdown(self, msg, details=None):
+        if details is None:
+            details = {}
         if self.in_shutdown_state:
             return
         logging.error("Transition to shutdown state: %s", msg)
@@ -211,12 +213,12 @@ class Printer:
             for cb in self.event_handlers.get("klippy:shutdown", []):
                 try:
                     cb()
-                except:
+                except Exception:
                     logging.exception("Exception during shutdown handler")
             for cb in self.event_handlers.get("klippy:analyze_shutdown", []):
                 try:
                     cb(msg, details)
-                except:
+                except Exception:
                     logging.exception("Exception in analyze_shutdown handler")
     def invoke_async_shutdown(self, msg, details={}):
         self.reactor.register_async_callback(
